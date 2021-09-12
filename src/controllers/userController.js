@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 
 export const getJoin = (req, res) => {
-  res.render("join", { pageTitle: "Join" });
+  res.render("nav/join", { pageTitle: "Join" });
 };
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
@@ -11,14 +11,14 @@ export const postJoin = async (req, res) => {
   const pageTitle = "Join";
   if (password !== password2) {
     {
-      return res.status(400).render("join", {
+      return res.status(400).render("nav/join", {
         pageTitle,
         errorMessage: "Password confirmation does not match",
       });
     }
   }
   if (exists) {
-    return res.status(400).render("join", {
+    return res.status(400).render("nav/join", {
       pageTitle,
       errorMessage: "This Username/email is already exists.",
     });
@@ -33,7 +33,7 @@ export const postJoin = async (req, res) => {
     });
     return res.redirect("/login");
   } catch (error) {
-    return res.status(400).render("join", {
+    return res.status(400).render("nav/join", {
       pageTitle,
       errorMessage: error._message,
     });
@@ -41,7 +41,7 @@ export const postJoin = async (req, res) => {
 };
 
 export const getLogin = (req, res) => {
-  res.render("login", { pageTitle: "Login" });
+  res.render("nav/login", { pageTitle: "Login" });
 };
 
 export const postLogin = async (req, res) => {
@@ -49,14 +49,14 @@ export const postLogin = async (req, res) => {
   const pageTitle = "Login";
   const user = await User.findOne({ username, socialOnly: false });
   if (!user) {
-    return res.status(400).render("login", {
+    return res.status(400).render("nav/login", {
       pageTitle,
       errorMessage: "An account with this username does not exists.",
     });
   }
   const checkLogin = await bcrypt.compare(password, user.password);
   if (!checkLogin) {
-    return res.status(400).render("login", {
+    return res.status(400).render("nav/login", {
       pageTitle,
       errorMessage: "Wrong password",
     });
@@ -141,54 +141,59 @@ export const finishGithubLogin = async (req, res) => {
   }
 };
 export const getEdit = async (req, res) => {
-  return res.render("edit-profile", { pageTitle: "Edit profile" });
+  return res.render("users/edit-profile", { pageTitle: "Edit profile" });
 };
 export const postEdit = async (req, res) => {
   const pageTitle = "Edit profile";
   const {
     session: {
-      user: { _id, email, username },
+      user: { _id, email: session_email, username: session_username },
     },
-    body: {
-      name: updated_name,
-      email: updated_email,
-      username: updated_username,
-      location: updated_location,
-    },
+    body: { name, email, username, location },
   } = req;
 
-  console.log(updated_email);
-  console.log(updated_name);
-
-  const sessionParams = { email: email, username: username };
-  const userParams = { email: updated_email, username: updated_username };
-
-  const check_diffrence =
-    JSON.stringify(sessionParams) === JSON.stringify(userParams);
-
-  if (!check_diffrence) {
+  let searchParams = [];
+  let isEmailChange = false;
+  let isUsernameChange = false;
+  let errorMessage = "";
+  if (session_email !== email) {
+    searchParams.push({ email });
+    isEmailChange = true;
+  }
+  if (session_username !== username) {
+    searchParams.push({ username });
+    isUsernameChange = true;
+  }
+  console.log(searchParams);
+  if (searchParams.length > 0) {
     const exists = await User.findOne({
-      $or: [{ email: updated_email }, { username: updated_username }],
+      $or: searchParams,
     });
-    if (exists && exists._id !== _id) {
-      return res.status(400).render("edit-profile", {
+    console.log(exists);
+    if (exists && exists._id.toString() !== _id) {
+      if (isEmailChange) {
+        errorMessage = "Email is already exists. Please Try Again.";
+      }
+      if (isUsernameChange) {
+        errorMessage = "Username is already exists. Please Try Again";
+      }
+      if (isEmailChange && isUsernameChange) {
+        errorMessage = "Username/Email is already exists. Please Try Again";
+      }
+      return res.status(400).render("users/edit-profile", {
         pageTitle,
-        errorMessage: "Username/Email is already exists. Please Try Again.",
+        errorMessage,
       });
     }
-  } else if (check_diffrence) {
-    return res.status(400).render("edit-profile", {
-      pageTitle,
-      errorMessage: "You Entered Same Profile. Please Try Again.",
-    });
   }
+
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     {
-      name: updated_name,
-      email: updated_email,
-      username: updated_username,
-      location: updated_location,
+      name,
+      email,
+      username,
+      location,
     },
     { new: true }
   );
@@ -197,6 +202,15 @@ export const postEdit = async (req, res) => {
 };
 export const logout = (req, res) => {
   req.session.destroy();
+  return res.redirect("/");
+};
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/change-password", { pageTitle: "Change Password" });
+};
+export const postChangePassword = (req, res) => {
   return res.redirect("/");
 };
 export const see = (req, res) => res.send("See User");

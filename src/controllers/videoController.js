@@ -1,7 +1,7 @@
 import Video from "../models/Video";
 export const home = async (req, res) => {
   const videos = await Video.find({}).sort({ createdAt: "desc" });
-  return res.render("home", {
+  return res.render("nav/home", {
     pageTitle: "Home",
     videos,
   });
@@ -13,7 +13,7 @@ export const watch = async (req, res) => {
   if (!video) {
     return res.render("404", { pageTitle: "Video not found" });
   }
-  return res.render("watch", {
+  return res.render("videos/watch", {
     pageTitle: video.title,
     video,
   });
@@ -25,7 +25,7 @@ export const getEdit = async (req, res) => {
   if (!video) {
     return res.render("404", { pageTitle: "Video not found" });
   }
-  res.render("edit-video", {
+  res.render("videos/edit-video", {
     pageTitle: `Editing: ${video.title} `,
     video,
   });
@@ -46,7 +46,7 @@ export const postEdit = async (req, res) => {
   return res.redirect(`/videos/${id}`);
 };
 export const upload = (req, res) => {
-  return res.render("upload", { pageTitle: "Upload Video" });
+  return res.render("videos/upload", { pageTitle: "Upload Video" });
 };
 
 export const postUpload = async (req, res) => {
@@ -59,7 +59,7 @@ export const postUpload = async (req, res) => {
     });
     return res.redirect("/");
   } catch (error) {
-    return res.status(400).render("upload", {
+    return res.status(400).render("videos/upload", {
       pageTitle: "Upload Video",
       errorMessage: error._message,
     });
@@ -76,7 +76,7 @@ export const search = async (req, res) => {
       },
     }).sort({ createdAt: "desc" });
   }
-  res.render("search", {
+  res.render("nav/search", {
     pageTitle: "Search Video",
     videos,
   });
