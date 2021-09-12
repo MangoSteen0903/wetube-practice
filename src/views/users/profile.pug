@@ -1,0 +1,5 @@
+extends ../layout.pug
+include ../mixins/video
+block content
+    each info in user.videos 
+        +video(info)
