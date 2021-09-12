@@ -1,0 +1,7 @@
+extends layout
+include mixins/video
+block content
+    each info in videos 
+        +video(info)
+    else
+        li Sorry, there is no videos.

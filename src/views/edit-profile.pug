@@ -1,0 +1,12 @@
+extends layout.pug
+
+block content 
+    h4 Update Your Profile
+    if errorMessage
+        span=errorMessage
+    form(method="POST")
+        input(name="email",placholder="Your email",value=loggedInUser.email,required,type="email")
+        input(name="username",placholder="Your Username",value=loggedInUser.username,required)
+        input(name="name",placholder="Your Name",value=loggedInUser.username,required)
+        input(name="location",placholder="Your location",value=loggedInUser.location)
+        input(value="Update Profile",type="submit")

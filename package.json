@@ -1,0 +1,36 @@
+{
+  "name": "wetube",
+  "version": "1.0.0",
+  "description": "purpose to practice",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MangoSteen0903/wetube-practice.git"
+  },
+  "scripts": {
+    "dev": "nodemon --exec  babel-node src/init.js"
+  },
+  "author": "Sungjin Lee",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MangoSteen0903/wetube-practice/issues"
+  },
+  "homepage": "https://github.com/MangoSteen0903/wetube-practice#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-mongo": "^4.5.0",
+    "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "mongoose": "^6.0.5",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.1",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
+    "nodemon": "^2.0.12"
+  }
+}
