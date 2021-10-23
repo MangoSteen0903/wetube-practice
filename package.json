@@ -7,8 +7,12 @@
     "url": "git+https://github.com/MangoSteen0903/wetube-practice.git"
   },
   "scripts": {
+    "start": "node build/init.js",
+    "build": "npm run build:server && npm run build:assets",
+    "build:server": "babel src -d build",
+    "build:assets": "webpack --mode=production",
     "dev:server": "nodemon",
-    "dev:assets": "webpack"
+    "dev:assets": "webpack --mode=development -w"
   },
   "author": "Sungjin Lee",
   "license": "MIT",
@@ -35,7 +39,8 @@
     "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.5",
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
     "@babel/node": "^7.15.4",
     "@babel/preset-env": "^7.15.6",
     "css-loader": "^6.2.0",

@@ -13,10 +13,18 @@ const addComment = (text, id) => {
   const deleteIcon = document.createElement("i");
   deleteIcon.className = "fas fa-trash-alt";
   deleteIcon.addEventListener("click", handleDelete);
+
+  const div_context = document.createElement("div");
+  const div_button = document.createElement("div");
+  div_context.className = "video__comment-context";
+  div_button.className = "video__comment-button";
   span.innerText = ` ${text}`;
-  newComment.appendChild(icon);
-  newComment.appendChild(span);
-  newComment.appendChild(deleteIcon);
+  div_context.appendChild(icon);
+  div_context.appendChild(span);
+  div_button.appendChild(deleteIcon);
+
+  newComment.appendChild(div_context);
+  newComment.appendChild(div_button);
   commentList.prepend(newComment);
 };
 
