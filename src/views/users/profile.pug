@@ -2,7 +2,7 @@ extends ../layout.pug
 include ../mixins/video
 block content
     div.profile__data
-        if loggedInUser.socialOnly
+        if loggedInUser.avatarUrl.includes("github")
             img(src=user.avatarUrl).avatar
         else
             img(src="/" + user.avatarUrl).avatar
