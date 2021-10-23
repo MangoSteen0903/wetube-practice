@@ -5,6 +5,15 @@
     border-radius: 7px;
     width: 100%;
     background-color: ivory;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    object-fit: cover;
+    img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+    }
   }
   .video-mixin__data {
     padding: 0px 15px;
