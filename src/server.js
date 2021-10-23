@@ -8,6 +8,7 @@ import flash from "express-flash";
 import { localsMiddleware } from "./middelwares";
 import MongoStore from "connect-mongo";
 import apiRouter from "./routers/apiRouter";
+import cors from "cors";
 const app = express();
 const logger = morgan("dev");
 app.set("view engine", "pug");
@@ -28,6 +29,7 @@ app.use(
   })
 );
 app.use(flash());
+app.use(cors());
 app.use(localsMiddleware);
 app.use((req, res, next) => {
   res.header("Cross-Origin-Embedder-Policy", "require-corp");

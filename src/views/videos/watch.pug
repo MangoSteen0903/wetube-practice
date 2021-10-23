@@ -2,7 +2,7 @@ extends ../layout.pug
 
 block content 
     div#videoContainer(data-id=video._id)
-        video(src="/"+video.fileUrl)
+        video(src=video.fileUrl)
         div#videoControls.videoControls
             div.controls__playBtn
                 span#play 
