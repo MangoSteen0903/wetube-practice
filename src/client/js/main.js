@@ -1,5 +1,2 @@
-const hello = async () => {
-  alert("hi");
-  const x = await fetch("");
-};
-hello();
+import "../scss/styles.scss";
+import regeneratorRuntime from "regenerator-runtime";

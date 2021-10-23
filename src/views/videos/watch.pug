@@ -1,14 +1,51 @@
 extends ../layout.pug
 
 block content 
-    video(src="/"+video.fileUrl,controls)
-    div
-        p=video.description
-        small=video.createdAt
-    div 
-        small Uploaded by 
-        a(href=`/users/${video.owner._id}`)=video.owner.username
-    if video.owner._id.toString() === loggedInUser._id    
-        a(href=`${video.id}/edit-video`) Edit Video &rarr;
-        br
-        a(href=`${video.id}/delete`) Delete Video &rarr;
+    div#videoContainer(data-id=video._id)
+        video(src="/"+video.fileUrl)
+        div#videoControls.videoControls
+            div.controls__playBtn
+                span#play 
+                    i.fas.fa-play 
+            div.controls__time
+                span#currentTime 00:00
+                span  / 
+                span#totalTime 00:00
+            div.controls__timeline
+                input(type="range",step="1", value=0, min="0")#timeline
+            div.contorls__volume
+                input(type="range",step="0.1", value=0.5, min="0", max="1")#volume
+                span#mute
+                    i.fas.fa-volume-up
+            div
+                span#fullScreen
+                    i.fas.fa-expand
+    div.video__data
+        p.video__title=video.title
+        small.video__owner Uploaded by 
+            a(href=`/users/${video.owner._id}`)=video.owner.name
+        small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
+        if String(video.owner._id) === String(loggedInUser._id)
+            a(href=`${video.id}/edit`) Edit Video &rarr;
+            br
+            a(href=`${video.id}/delete`) Delete Video &rarr;
+    if loggedIn
+        div.video__add-comments
+            form.video__comment-form#commentForm
+                textarea(cols="30",rows="10",placeholder="Write a nice comment...")
+                button Add comment
+    
+    div.video__comments#comments
+        ul
+            each comment in video.comments.reverse()
+                li.video__comment(data-id=comment.id)
+                    div.video__comment-context
+                        i.fas.fa-comment
+                        span #{comment.text}
+                    div.video__comment-button#comment-button
+                        if String(comment.owner._id) === String(loggedInUser._id)
+                            i.fas.fa-trash-alt
+block scripts 
+    script(src="/assets/js/videoPlayer.js")
+    if loggedIn
+        script(src="/assets/js/commentSection.js")

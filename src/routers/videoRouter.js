@@ -19,7 +19,13 @@ videoRouter
   .route("/upload")
   .all(protectorMiddleware)
   .get(upload)
-  .post(videoUpload.single("video"), postUpload);
+  .post(
+    videoUpload.fields([
+      { name: "video", maxCount: 1 },
+      { name: "thumbnail", maxCount: 1 },
+    ]),
+    postUpload
+  );
 videoRouter.get("/:id([0-9a-f]{24})", watch);
 
 videoRouter
